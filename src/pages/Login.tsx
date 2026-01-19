@@ -6,19 +6,34 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { isEmail, useForm } from "@mantine/form";
+import { useForm } from "@mantine/form";
 
 export default function LoginPage() {
   const form = useForm({
     mode: "controlled",
-    initialValues: { email: "", password: "" },
-    validate: {
-      email: isEmail("Invalid email"),
-    },
+    initialValues: { username: "", password: "" },
+    validate: {},
   });
 
-  const handleSubmit = (values: { email: string; password: string }) => {
-    console.log(values);
+  const handleSubmit = async (values: {
+    username: string;
+    password: string;
+  }) => {
+    const credentials = btoa(`${values.username}:${values.password}`);
+
+    const response = await fetch("/dhis2/api/me", {
+      headers: {
+        Authorization: `Basic ${credentials}`,
+      },
+      credentials: "include", // Important: This allows cookies to be set/sent
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to login");
+    }
+
+    const data = await response.json();
+    console.log(data);
   };
 
   return (
@@ -28,11 +43,11 @@ export default function LoginPage() {
       <Paper withBorder shadow="sm" p={22} mt={30} radius="md">
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <TextInput
-            label="Email"
+            label="Username"
             ta="start"
             required
             radius="md"
-            {...form.getInputProps("email")}
+            {...form.getInputProps("username")}
           />
           <PasswordInput
             label="Password"
