@@ -7,6 +7,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const form = useForm({
@@ -14,6 +15,8 @@ export default function LoginPage() {
     initialValues: { username: "", password: "" },
     validate: {},
   });
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (values: {
     username: string;
@@ -34,6 +37,8 @@ export default function LoginPage() {
 
     const data = await response.json();
     console.log(data);
+
+    navigate("/home", { replace: true });
   };
 
   return (
