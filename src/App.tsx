@@ -4,14 +4,25 @@ import LoginPage from "./pages/Login";
 import HomePage from "./pages/Home";
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
+import { AuthProvider } from "./context/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 function App() {
   return (
     <MantineProvider>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/home" element={<HomePage />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
     </MantineProvider>
   );
 }

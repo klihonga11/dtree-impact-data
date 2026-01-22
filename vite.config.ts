@@ -11,6 +11,8 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/dhis2/, ""),
+        cookieDomainRewrite: "localhost", // Rewrite cookie domain
+        cookiePathRewrite: "/", // Rewrite cookie path
       },
     },
   },

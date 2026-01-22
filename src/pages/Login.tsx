@@ -8,6 +8,8 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 export default function LoginPage() {
   const form = useForm({
@@ -17,28 +19,24 @@ export default function LoginPage() {
   });
 
   const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/home", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (values: {
     username: string;
     password: string;
   }) => {
-    const credentials = btoa(`${values.username}:${values.password}`);
-
-    const response = await fetch("/dhis2/api/me", {
-      headers: {
-        Authorization: `Basic ${credentials}`,
-      },
-      credentials: "include", // Important: This allows cookies to be set/sent
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to login");
+    try {
+      await login(values.username, values.password);
+      navigate("/home", { replace: true });
+    } catch (error) {
+      console.log("Failed to login", error);
     }
-
-    const data = await response.json();
-    console.log(data);
-
-    navigate("/home", { replace: true });
   };
 
   return (
