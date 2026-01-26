@@ -33,7 +33,6 @@ export default function LoginPage() {
   }) => {
     try {
       await login(values.username, values.password);
-      navigate("/home", { replace: true });
     } catch (error) {
       console.log("Failed to login", error);
     }

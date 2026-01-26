@@ -22,13 +22,11 @@ export function AuthProvider({
       });
 
       // Handle redirect (not authenticated)
-      if (response.type === "opaqueredirect" || response.status === 0) {
-        setIsAuthenticated(false);
-        setUser(null);
-        return;
-      }
-
-      if (!response.ok) {
+      if (
+        response.type === "opaqueredirect" ||
+        response.status === 0 ||
+        !response.ok
+      ) {
         setIsAuthenticated(false);
         setUser(null);
         return;
