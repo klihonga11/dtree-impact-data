@@ -1,10 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import classes from "../css/NavbarSimple.module.css";
+import { Container, Text } from "@mantine/core";
 
 const data = [
-  { link: "", label: "1. Individuals Served" },
+  { link: "/home/individuals-served", label: "1. Individuals Served" },
   { link: "", label: "2. Improved coordination" },
   { link: "", label: "3. Government supported" },
   { link: "", label: "4. Health visits supported" },
@@ -18,7 +19,6 @@ const data = [
 
 export default function HomePage() {
   const { isAuthenticated, logout } = useAuth();
-  const [active, setActive] = useState("1. Individuals Served");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,29 +33,40 @@ export default function HomePage() {
   };
 
   const links = data.map((item) => (
-    <a
-      className={classes.link}
-      data-active={item.label === active || undefined}
-      href={item.link}
+    <NavLink
+      to={item.link}
       key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.label);
-      }}
+      className={({ isActive }) =>
+        `${classes.link} ${isActive ? classes.active : ""}`
+      }
     >
       <span>{item.label}</span>
-    </a>
+    </NavLink>
   ));
 
   return (
-    <nav className={classes.navbar}>
-      <div className={classes.navbarMain}>{links}</div>
+    <>
+      <header className={classes.header}>
+        <Container size="md" className={classes.inner}>
+          <Text>D-tree Impact Management Data</Text>
+        </Container>
+      </header>
 
-      <div className={classes.footer}>
-        <a href="#" className={classes.link} onClick={handleLogout}>
-          <span>Logout</span>
-        </a>
+      <div style={{ display: "flex" }}>
+        <nav className={classes.navbar}>
+          <div className={classes.navbarMain}>{links}</div>
+
+          <div className={classes.footer}>
+            <a href="#" className={classes.link} onClick={handleLogout}>
+              <span>Logout</span>
+            </a>
+          </div>
+        </nav>
+
+        <div style={{ flex: 1, padding: "2rem" }}>
+          <Outlet />
+        </div>
       </div>
-    </nav>
+    </>
   );
 }

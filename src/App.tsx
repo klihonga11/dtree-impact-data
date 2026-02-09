@@ -6,6 +6,7 @@ import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import IndividualsServed from "./pages/IndividualsServed";
 
 function App() {
   return (
@@ -20,7 +21,9 @@ function App() {
                 <HomePage />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="individuals-served" element={<IndividualsServed />} />
+          </Route>
         </Routes>
       </AuthProvider>
     </MantineProvider>
