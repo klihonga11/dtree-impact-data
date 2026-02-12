@@ -1,4 +1,5 @@
-import { Button, MultiSelect, NativeSelect } from "@mantine/core";
+import { Button, Group, MultiSelect, NativeSelect } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
 import { useState } from "react";
 
 export default function IndividualsServed() {
@@ -37,6 +38,10 @@ export default function IndividualsServed() {
     []
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [dateRange, setDateRange] = useState<[string | null, string | null]>([
+    null,
+    null,
+  ]);
 
   const getPrograms = async () => {
     try {
@@ -85,24 +90,34 @@ export default function IndividualsServed() {
 
   return (
     <>
-      <Button onClick={downloadData}>Click me!</Button>
-      <NativeSelect
-        label="Programs"
-        disabled={isLoading}
-        data={programs.map((p) => ({
-          value: p.id,
-          label: p.displayName,
-        }))}
-      />
+      <Group justify="space-between" align="flex-end" grow>
+        <Button onClick={downloadData}>Click me!</Button>
+        <NativeSelect
+          label="Programs"
+          disabled={isLoading}
+          data={programs.map((p) => ({
+            value: p.id,
+            label: p.displayName,
+          }))}
+        />
 
-      <MultiSelect
-        label="Organisation units"
-        disabled={isLoading}
-        data={organisationUnit.map((p) => ({
-          value: p.id,
-          label: p.displayName,
-        }))}
-      />
+        <MultiSelect
+          label="Organisation units"
+          disabled={isLoading}
+          data={organisationUnit.map((p) => ({
+            value: p.id,
+            label: p.displayName,
+          }))}
+        />
+
+        <DatePickerInput
+          type="range"
+          label="Pick a date range"
+          placeholder="Pick dates range"
+          value={dateRange}
+          onChange={setDateRange}
+        />
+      </Group>
     </>
   );
 }
