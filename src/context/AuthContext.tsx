@@ -1,5 +1,6 @@
 import { useEffect, useState, type JSX, type ReactNode } from "react";
 import { AuthContext } from "./auth.context";
+import { init } from "../utils/setup";
 
 export function AuthProvider({
   children,
@@ -58,6 +59,8 @@ export function AuthProvider({
     if (!response.ok && response.type !== "opaqueredirect") {
       throw new Error("Failed to login");
     }
+
+    await init();
 
     const data = await response.json();
     setUser(data);
