@@ -9,19 +9,13 @@ export default function IndividualsServed() {
     null,
   ]);
 
-  const programsData = localStorage.getItem("programs");
-  const organisationUnitsData = localStorage.getItem("organisationUnits");
+  const programs: Program[] = JSON.parse(
+    localStorage.getItem("programs") ?? "[]"
+  );
 
-  let programs: Program[] = [];
-  let organisationUnits: OrganisationUnit[] = [];
-
-  if (programsData !== null) {
-    programs = JSON.parse(programsData);
-  }
-
-  if (organisationUnitsData !== null) {
-    organisationUnits = JSON.parse(organisationUnitsData);
-  }
+  const organisationUnits: OrganisationUnit[] = JSON.parse(
+    localStorage.getItem("organisationUnits") ?? "[]"
+  );
 
   return (
     <>
