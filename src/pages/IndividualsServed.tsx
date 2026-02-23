@@ -12,10 +12,28 @@ export default function IndividualsServed() {
   const programs: Program[] = JSON.parse(
     localStorage.getItem("programs") ?? "[]"
   );
+  const [selectedProgramId, setSelectedProgramId] = useState<string>("");
 
   const organisationUnits: OrganisationUnit[] = JSON.parse(
     localStorage.getItem("organisationUnits") ?? "[]"
   );
+  const [selectedOrganisationUnits, setSelectedOrganisationUnits] = useState<
+    string[]
+  >([]);
+
+  const getData = async () => {
+    try {
+      const url = `/dhis2/api/analytics/events/query/${selectedProgramId}?startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${selectedOrganisationUnits.join(";")}&outputType=ENROLLMENT&pageSize=1&totalPages=true`;
+
+      const response = await fetch(url);
+
+      const data = await response.json();
+
+      console.log(data);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
 
   return (
     <>
@@ -26,6 +44,8 @@ export default function IndividualsServed() {
             value: p.id,
             label: p.displayName,
           }))}
+          value={selectedProgramId}
+          onChange={(event) => setSelectedProgramId(event.target.value)}
         />
 
         <MultiSelect
@@ -34,6 +54,8 @@ export default function IndividualsServed() {
             value: p.id,
             label: p.displayName,
           }))}
+          value={selectedOrganisationUnits}
+          onChange={setSelectedOrganisationUnits}
         />
 
         <DatePickerInput
@@ -44,7 +66,7 @@ export default function IndividualsServed() {
           onChange={setDateRange}
         />
 
-        <Button>Apply</Button>
+        <Button onClick={getData}>Apply</Button>
       </Group>
     </>
   );
