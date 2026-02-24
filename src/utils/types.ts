@@ -27,3 +27,14 @@ export type OrganisationUnitResponse = {
   };
   organisationUnits: OrganisationUnit[];
 };
+
+export type IndividualsServedResponse = {
+  metaData: {
+    pager: {
+      page: number;
+      total: number;
+      pageSize: number;
+      pageCount: number;
+    };
+  };
+};

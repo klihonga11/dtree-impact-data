@@ -1,7 +1,11 @@
-import { Button, Group, MultiSelect, NativeSelect } from "@mantine/core";
+import { Button, Group, MultiSelect, NativeSelect, Table } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useState } from "react";
-import type { OrganisationUnit, Program } from "../utils/types";
+import type {
+  IndividualsServedResponse,
+  OrganisationUnit,
+  Program,
+} from "../utils/types";
 
 export default function IndividualsServed() {
   const [dateRange, setDateRange] = useState<[string | null, string | null]>([
@@ -21,19 +25,41 @@ export default function IndividualsServed() {
     string[]
   >([]);
 
+  type RowType = {
+    id: string;
+    district: string;
+    count: number;
+  };
+  const [tableRows, setTableRows] = useState<RowType[]>([]);
+
   const getData = async () => {
     try {
       const url = `/dhis2/api/analytics/events/query/${selectedProgramId}?startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${selectedOrganisationUnits.join(";")}&outputType=ENROLLMENT&pageSize=1&totalPages=true`;
 
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        credentials: "include",
+      });
 
-      const data = await response.json();
+      const data: IndividualsServedResponse = await response.json();
 
-      console.log(data);
+      setTableRows([
+        {
+          id: selectedOrganisationUnits[0],
+          district: selectedOrganisationUnits[0],
+          count: data.metaData.pager.pageCount,
+        },
+      ]);
     } catch (error) {
       console.log("Error", error);
     }
   };
+
+  const rows = tableRows.map((element) => (
+    <Table.Tr key={element.id}>
+      <Table.Td>{element.district}</Table.Td>
+      <Table.Td>{element.count}</Table.Td>
+    </Table.Tr>
+  ));
 
   return (
     <>
@@ -68,6 +94,16 @@ export default function IndividualsServed() {
 
         <Button onClick={getData}>Apply</Button>
       </Group>
+
+      <Table>
+        <Table.Thead>
+          <Table.Tr>
+            <Table.Th>District</Table.Th>
+            <Table.Th>Count</Table.Th>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>{rows}</Table.Tbody>
+      </Table>
     </>
   );
 }
