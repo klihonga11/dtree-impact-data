@@ -1,4 +1,11 @@
-import { Button, Group, MultiSelect, NativeSelect, Table } from "@mantine/core";
+import {
+  Button,
+  Group,
+  MultiSelect,
+  NativeSelect,
+  Space,
+  Table,
+} from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useState } from "react";
 import type {
@@ -14,12 +21,12 @@ export default function IndividualsServed() {
   ]);
 
   const programs: Program[] = JSON.parse(
-    localStorage.getItem("programs") ?? "[]"
+    localStorage.getItem("programs") ?? "[]",
   );
   const [selectedProgramId, setSelectedProgramId] = useState<string>("");
 
   const organisationUnits: OrganisationUnit[] = JSON.parse(
-    localStorage.getItem("organisationUnits") ?? "[]"
+    localStorage.getItem("organisationUnits") ?? "[]",
   );
   const [selectedOrganisationUnits, setSelectedOrganisationUnits] = useState<
     string[]
@@ -54,9 +61,17 @@ export default function IndividualsServed() {
     }
   };
 
+  // TODO
+  //1. SHOW THE NAME OF THE DISTRICT
+  //2. ADD A SPACER BELOW THE FILTERS
+  //3. LOAD MULTIPLE DISTRICTS AT ONCE
+  //4. ADD A TOTAL AT THE BOTTOM
+
   const rows = tableRows.map((element) => (
     <Table.Tr key={element.id}>
-      <Table.Td>{element.district}</Table.Td>
+      <Table.Td>
+        {organisationUnits.find((ou) => ou.id === element.id)?.displayName}
+      </Table.Td>
       <Table.Td>{element.count}</Table.Td>
     </Table.Tr>
   ));
@@ -94,6 +109,8 @@ export default function IndividualsServed() {
 
         <Button onClick={getData}>Apply</Button>
       </Group>
+
+      <Space h="lg" />
 
       <Table>
         <Table.Thead>
