@@ -39,9 +39,21 @@ export default function IndividualsServed() {
   };
   const [tableRows, setTableRows] = useState<RowType[]>([]);
 
-  const getData = async () => {
+  const applyFilters = async () => {
     try {
-      const url = `/dhis2/api/analytics/events/query/${selectedProgramId}?startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${selectedOrganisationUnits.join(";")}&outputType=ENROLLMENT&pageSize=1&totalPages=true`;
+      setTableRows([]); // clear the table
+
+      for (const ou of selectedOrganisationUnits) {
+        await getData(ou);
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  const getData = async (organisationUnitId: string) => {
+    try {
+      const url = `/dhis2/api/analytics/events/query/${selectedProgramId}?startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId}&outputType=ENROLLMENT&pageSize=1&totalPages=true`;
 
       const response = await fetch(url, {
         credentials: "include",
@@ -49,10 +61,13 @@ export default function IndividualsServed() {
 
       const data: IndividualsServedResponse = await response.json();
 
-      setTableRows([
+      setTableRows((prev) => [
+        ...prev,
         {
-          id: selectedOrganisationUnits[0],
-          district: selectedOrganisationUnits[0],
+          id: organisationUnitId,
+          district:
+            organisationUnits.find((ou) => ou.id === organisationUnitId)
+              ?.displayName ?? "",
           count: data.metaData.pager.pageCount,
         },
       ]);
@@ -61,17 +76,9 @@ export default function IndividualsServed() {
     }
   };
 
-  // TODO
-  //1. SHOW THE NAME OF THE DISTRICT
-  //2. ADD A SPACER BELOW THE FILTERS
-  //3. LOAD MULTIPLE DISTRICTS AT ONCE
-  //4. ADD A TOTAL AT THE BOTTOM
-
   const rows = tableRows.map((element) => (
     <Table.Tr key={element.id}>
-      <Table.Td>
-        {organisationUnits.find((ou) => ou.id === element.id)?.displayName}
-      </Table.Td>
+      <Table.Td>{element.district}</Table.Td>
       <Table.Td>{element.count}</Table.Td>
     </Table.Tr>
   ));
@@ -97,6 +104,7 @@ export default function IndividualsServed() {
           }))}
           value={selectedOrganisationUnits}
           onChange={setSelectedOrganisationUnits}
+          clearable
         />
 
         <DatePickerInput
@@ -107,7 +115,7 @@ export default function IndividualsServed() {
           onChange={setDateRange}
         />
 
-        <Button onClick={getData}>Apply</Button>
+        <Button onClick={applyFilters}>Apply</Button>
       </Group>
 
       <Space h="lg" />
