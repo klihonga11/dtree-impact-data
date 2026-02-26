@@ -1,6 +1,8 @@
 import {
   Button,
+  Center,
   Group,
+  Loader,
   MultiSelect,
   NativeSelect,
   Space,
@@ -39,9 +41,12 @@ export default function IndividualsServed() {
   };
   const [tableRows, setTableRows] = useState<RowType[]>([]);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const applyFilters = async () => {
     try {
       setTableRows([]); // clear the table
+      setIsLoading(true);
 
       const tempRows = [];
       for (const ou of selectedOrganisationUnits) {
@@ -52,6 +57,8 @@ export default function IndividualsServed() {
       setTableRows(tempRows); // update the table
     } catch (error) {
       console.log("Error", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -122,15 +129,21 @@ export default function IndividualsServed() {
 
       <Space h="lg" />
 
-      <Table>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>District</Table.Th>
-            <Table.Th>Count</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
+      {isLoading ? (
+        <Center>
+          <Loader />
+        </Center>
+      ) : (
+        <Table>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>District</Table.Th>
+              <Table.Th>Count</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
+      )}
     </>
   );
 }
