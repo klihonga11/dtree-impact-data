@@ -43,15 +43,19 @@ export default function IndividualsServed() {
     try {
       setTableRows([]); // clear the table
 
+      const tempRows = [];
       for (const ou of selectedOrganisationUnits) {
-        await getData(ou);
+        const data = await getData(ou);
+        tempRows.push(data);
       }
+
+      setTableRows(tempRows); // update the table
     } catch (error) {
       console.log("Error", error);
     }
   };
 
-  const getData = async (organisationUnitId: string) => {
+  const getData = async (organisationUnitId: string): Promise<RowType> => {
     try {
       const url = `/dhis2/api/analytics/events/query/${selectedProgramId}?startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId}&outputType=ENROLLMENT&pageSize=1&totalPages=true`;
 
@@ -61,18 +65,16 @@ export default function IndividualsServed() {
 
       const data: IndividualsServedResponse = await response.json();
 
-      setTableRows((prev) => [
-        ...prev,
-        {
-          id: organisationUnitId,
-          district:
-            organisationUnits.find((ou) => ou.id === organisationUnitId)
-              ?.displayName ?? "",
-          count: data.metaData.pager.pageCount,
-        },
-      ]);
+      return {
+        id: organisationUnitId,
+        district:
+          organisationUnits.find((ou) => ou.id === organisationUnitId)
+            ?.displayName ?? "",
+        count: data.metaData.pager.pageCount,
+      };
     } catch (error) {
       console.log("Error", error);
+      throw error;
     }
   };
 
