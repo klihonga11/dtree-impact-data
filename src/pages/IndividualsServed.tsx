@@ -114,6 +114,20 @@ export default function IndividualsServed() {
           value={selectedOrganisationUnits}
           onChange={setSelectedOrganisationUnits}
           clearable
+          leftSection={
+            selectedOrganisationUnits.length > 0 ? (
+              <span
+                style={{ fontSize: 14, color: "black", whiteSpace: "nowrap" }}
+              >
+                {selectedOrganisationUnits.length} districts selected
+              </span>
+            ) : null
+          }
+          leftSectionWidth={selectedOrganisationUnits.length > 0 ? 160 : 0}
+          styles={{
+            pill: { display: "none" },
+            inputField: { display: "none" },
+          }}
         />
 
         <DatePickerInput
