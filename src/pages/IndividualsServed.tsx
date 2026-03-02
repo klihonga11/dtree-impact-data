@@ -15,6 +15,7 @@ import type {
   OrganisationUnit,
   Program,
 } from "../utils/types";
+import CustomAlert from "../components/Alert";
 
 export default function IndividualsServed() {
   const [dateRange, setDateRange] = useState<[string | null, string | null]>([
@@ -43,7 +44,32 @@ export default function IndividualsServed() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const applyFilters = async () => {
+  const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>("");
+
+  const applyFilters = () => {
+    if (selectedProgramId == "") {
+      setAlertMessage("Please select a program");
+      setIsAlertVisible(true);
+      return;
+    }
+
+    if (selectedOrganisationUnits.length == 0) {
+      setAlertMessage("Please select an organisation unit");
+      setIsAlertVisible(true);
+      return;
+    }
+
+    if (dateRange[0] === null || dateRange[1] === null) {
+      setAlertMessage("Please select a date range");
+      setIsAlertVisible(true);
+      return;
+    }
+
+    populateTable();
+  };
+
+  const populateTable = async () => {
     try {
       setTableRows([]); // clear the table
       setIsLoading(true);
@@ -157,6 +183,13 @@ export default function IndividualsServed() {
           </Table.Thead>
           <Table.Tbody>{rows}</Table.Tbody>
         </Table>
+      )}
+
+      {isAlertVisible && (
+        <CustomAlert
+          message={alertMessage}
+          onClose={() => setIsAlertVisible(false)}
+        />
       )}
     </>
   );
