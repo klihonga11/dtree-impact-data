@@ -181,7 +181,15 @@ export default function IndividualsServed() {
               <Table.Th>Count</Table.Th>
             </Table.Tr>
           </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
+          <Table.Tbody>
+            {rows}
+            <Table.Tr style={{ borderTop: "2px solid #000" }}>
+              <Table.Td fw={700}>TOTAL</Table.Td>
+              <Table.Td fw={700}>
+                {tableRows.reduce((sum, item) => sum + item.count, 0)}
+              </Table.Td>
+            </Table.Tr>
+          </Table.Tbody>
         </Table>
       )}
 
