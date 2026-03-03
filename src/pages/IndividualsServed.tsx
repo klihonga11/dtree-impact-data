@@ -123,19 +123,22 @@ export default function IndividualsServed() {
       <Group justify="space-between" align="flex-end" grow>
         <NativeSelect
           label="Programs"
-          data={programs.map((p) => ({
-            value: p.id,
-            label: p.displayName,
-          }))}
+          data={[
+            { value: "", label: "", disabled: true },
+            ...programs.map((p) => ({
+              value: p.id,
+              label: p.displayName,
+            })),
+          ]}
           value={selectedProgramId}
           onChange={(event) => setSelectedProgramId(event.target.value)}
         />
 
         <MultiSelect
           label="Organisation units"
-          data={organisationUnits.map((p) => ({
-            value: p.id,
-            label: p.displayName,
+          data={organisationUnits.map((ou) => ({
+            value: ou.id,
+            label: ou.displayName,
           }))}
           value={selectedOrganisationUnits}
           onChange={setSelectedOrganisationUnits}
@@ -158,8 +161,7 @@ export default function IndividualsServed() {
 
         <DatePickerInput
           type="range"
-          label="Pick a date range"
-          placeholder="Pick dates range"
+          label="Date range"
           value={dateRange}
           onChange={setDateRange}
         />
