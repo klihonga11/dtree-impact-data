@@ -30,10 +30,10 @@ const getOrganizationUnits = async () => {
   }
 
   const data: OrganisationUnitResponse = await response.json();
-  localStorage.setItem(
-    "organisationUnits",
-    JSON.stringify(data.organisationUnits),
+  const orgUnits = data.organisationUnits.filter((ou) =>
+    ou.displayName.includes("-DHO"),
   );
+  localStorage.setItem("organisationUnits", JSON.stringify(orgUnits));
 };
 
 export const init = async () => {
