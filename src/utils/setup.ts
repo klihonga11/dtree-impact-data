@@ -19,10 +19,10 @@ const getPrograms = async () => {
 
 const getOrganizationUnits = async () => {
   const response = await fetch(
-    "/dhis2/api/organisationUnits?filter=level:in:[1,3]",
+    "/dhis2/api/organisationUnits?filter=level:eq:3",
     {
       credentials: "include",
-    }
+    },
   );
 
   if (!response.ok) {
@@ -32,7 +32,7 @@ const getOrganizationUnits = async () => {
   const data: OrganisationUnitResponse = await response.json();
   localStorage.setItem(
     "organisationUnits",
-    JSON.stringify(data.organisationUnits)
+    JSON.stringify(data.organisationUnits),
   );
 };
 
