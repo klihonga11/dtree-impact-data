@@ -178,7 +178,9 @@ export default function IndividualsServed() {
           onChange={setDateRange}
         />
 
-        <Button onClick={applyFilters}>Apply</Button>
+        <Button onClick={applyFilters} disabled={isLoading}>
+          Apply
+        </Button>
       </Group>
 
       <Space h="lg" />
