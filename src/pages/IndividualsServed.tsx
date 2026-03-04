@@ -118,6 +118,15 @@ export default function IndividualsServed() {
     </Table.Tr>
   ));
 
+  const onSelectOrgUnit = (selected: string[]) => {
+    if (selected.includes("all")) {
+      setSelectedOrganisationUnits(organisationUnits.map((ou) => ou.id));
+      return;
+    }
+
+    setSelectedOrganisationUnits(selected);
+  };
+
   return (
     <>
       <Group justify="space-between" align="flex-end" grow>
@@ -136,12 +145,15 @@ export default function IndividualsServed() {
 
         <MultiSelect
           label="Organisation units"
-          data={organisationUnits.map((ou) => ({
-            value: ou.id,
-            label: ou.displayName,
-          }))}
+          data={[
+            { value: "all", label: "All districts" },
+            ...organisationUnits.map((ou) => ({
+              value: ou.id,
+              label: ou.displayName,
+            })),
+          ]}
           value={selectedOrganisationUnits}
-          onChange={setSelectedOrganisationUnits}
+          onChange={onSelectOrgUnit}
           clearable
           leftSection={
             selectedOrganisationUnits.length > 0 ? (
