@@ -2,9 +2,12 @@ import type { OrganisationUnitResponse, ProgramsResponse } from "./types";
 
 const getPrograms = async () => {
   try {
-    const response = await fetch("/dhis2/api/programs", {
-      credentials: "include",
-    });
+    const response = await fetch(
+      "/dhis2/api/programs?fields=id,name,programStages[id,name]",
+      {
+        credentials: "include",
+      },
+    );
 
     if (!response.ok) {
       throw new Error("Failed to get programs");

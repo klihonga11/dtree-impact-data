@@ -1,6 +1,7 @@
 export type Program = {
   id: string;
-  displayName: string;
+  name: string;
+  programStages: ProgramStage[];
 };
 
 export type ProgramsResponse = {
@@ -11,6 +12,11 @@ export type ProgramsResponse = {
     pageCount: number;
   };
   programs: Program[];
+};
+
+export type ProgramStage = {
+  id: string;
+  name: string;
 };
 
 export type OrganisationUnit = {
