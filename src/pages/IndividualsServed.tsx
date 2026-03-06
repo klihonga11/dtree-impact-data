@@ -213,7 +213,7 @@ export default function IndividualsServed() {
           <Loader />
         </Center>
       ) : (
-        <Table>
+        <Table highlightOnHover stickyHeader>
           <Table.Thead>
             <Table.Tr>
               <Table.Th>District</Table.Th>
