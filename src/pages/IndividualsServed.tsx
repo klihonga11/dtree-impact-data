@@ -27,6 +27,8 @@ export default function IndividualsServed() {
     localStorage.getItem("programs") ?? "[]",
   );
   const [selectedProgramId, setSelectedProgramId] = useState<string>("");
+  const [selectedProgramStageId, setSelectedProgramStageId] =
+    useState<string>("");
 
   const organisationUnits: OrganisationUnit[] = JSON.parse(
     localStorage.getItem("organisationUnits") ?? "[]",
@@ -90,7 +92,12 @@ export default function IndividualsServed() {
 
   const getData = async (organisationUnitId: string): Promise<RowType> => {
     try {
-      const url = `/dhis2/api/analytics/events/query/${selectedProgramId}?startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId}&outputType=ENROLLMENT&pageSize=1&totalPages=true`;
+      let url = "";
+      if (selectedProgramStageId == "") {
+        url = `/dhis2/api/analytics/events/query/${selectedProgramId}?startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId}&outputType=ENROLLMENT&pageSize=1&totalPages=true`;
+      } else {
+        url = `/dhis2/api/analytics/events/query/${selectedProgramId}?stage=${selectedProgramStageId}&startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId}&outputType=ENROLLMENT&pageSize=1&totalPages=true`;
+      }
 
       const response = await fetch(url, {
         credentials: "include",
@@ -131,20 +138,36 @@ export default function IndividualsServed() {
     <>
       <Group justify="space-between" align="flex-end" grow>
         <NativeSelect
-          label="Programs"
+          label="*Program"
+          styles={{ input: { color: "black" } }}
           data={[
             { value: "", label: "", disabled: true },
             ...programs.map((p) => ({
               value: p.id,
-              label: p.displayName,
+              label: p.name,
             })),
           ]}
           value={selectedProgramId}
           onChange={(event) => setSelectedProgramId(event.target.value)}
         />
 
+        <NativeSelect
+          label="Program stage"
+          data={[
+            { value: "", label: "" },
+            ...(programs
+              .find((p) => p.id === selectedProgramId)
+              ?.programStages.map((ps) => ({
+                value: ps.id,
+                label: ps.name,
+              })) ?? []),
+          ]}
+          value={selectedProgramStageId}
+          onChange={(event) => setSelectedProgramStageId(event.target.value)}
+        />
+
         <MultiSelect
-          label="Organisation units"
+          label="*Organisation unit"
           data={[
             { value: "all", label: "All districts" },
             ...organisationUnits.map((ou) => ({
@@ -173,7 +196,7 @@ export default function IndividualsServed() {
 
         <DatePickerInput
           type="range"
-          label="Date range"
+          label="*Date range"
           value={dateRange}
           onChange={setDateRange}
         />
