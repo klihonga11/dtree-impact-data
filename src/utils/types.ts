@@ -42,5 +42,19 @@ export type IndividualsServedResponse = {
       pageSize: number;
       pageCount: number;
     };
+    items: {
+      [key: string]: {
+        name: string;
+      };
+    };
+    dimensions: {
+      ou: [string];
+    };
   };
+};
+
+export type TableRowType = {
+  id: string;
+  district: string;
+  count: number;
 };
