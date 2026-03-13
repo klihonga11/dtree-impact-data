@@ -9,6 +9,7 @@ type DataFilterReturnType = {
     programStageId: string,
     organisationUnits: string[],
     dateRange: [string | null, string | null],
+    outputType: string,
   ) => Promise<void>;
 };
 
@@ -21,6 +22,7 @@ export const useDataFilter = (): DataFilterReturnType => {
     programStageId: string,
     organisationUnits: string[],
     dateRange: [string | null, string | null],
+    outputType: string,
   ) => {
     console.log("start");
     console.log(programId);
@@ -38,7 +40,7 @@ export const useDataFilter = (): DataFilterReturnType => {
     console.log("continue");
     const promises: Promise<IndividualsServedResponse>[] = [];
     organisationUnits.forEach((organisationUnitId) => {
-      const url = `/dhis2/api/analytics/events/query/${programId}?${programStageId === "" ? "" : "stage=" + programStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId}&outputType=ENROLLMENT&pageSize=1&totalPages=true`;
+      const url = `/dhis2/api/analytics/events/query/${programId}?${programStageId === "" ? "" : "stage=" + programStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId}&outputType=${outputType}&pageSize=1&totalPages=true`;
       promises.push(
         fetch(url, { credentials: "include" }).then((result) => result.json()),
       );

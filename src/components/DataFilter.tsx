@@ -3,6 +3,7 @@ import { DatePickerInput } from "@mantine/dates";
 import { useState } from "react";
 import type { Program, OrganisationUnit } from "../utils/types";
 import CustomAlert from "./Alert";
+import { OUTPUT_TYPE_ENROLLMENT } from "../utils/static";
 
 type DataFilterProps = {
   getData: (
@@ -10,6 +11,7 @@ type DataFilterProps = {
     programStageId: string,
     organisationUnits: string[],
     dateRange: [string | null, string | null],
+    outputType: string,
   ) => void;
 };
 
@@ -69,6 +71,7 @@ export default function DataFilter({ getData }: DataFilterProps) {
       selectedProgramStageId,
       selectedOrganisationUnits,
       dateRange,
+      OUTPUT_TYPE_ENROLLMENT,
     );
   };
 

@@ -1,0 +1,2 @@
+export const OUTPUT_TYPE_ENROLLMENT = "ENROLLMENT";
+export const OUTPUT_TYPE_EVENT = "EVENT";
