@@ -5,14 +5,15 @@ import type { Program, OrganisationUnit } from "../utils/types";
 import CustomAlert from "./Alert";
 
 type DataFilterProps = {
-  onPopulateTable: (
-    selectedProgram: string,
-    selectedProgramStage: string,
-    selectedOrgUnits: string[],
-    seletedDateRange: [string | null, string | null],
+  getData: (
+    programId: string,
+    programStageId: string,
+    organisationUnits: string[],
+    dateRange: [string | null, string | null],
   ) => void;
 };
-export default function DataFilter({ onPopulateTable }: DataFilterProps) {
+
+export default function DataFilter({ getData }: DataFilterProps) {
   const [dateRange, setDateRange] = useState<[string | null, string | null]>([
     null,
     null,
@@ -63,7 +64,7 @@ export default function DataFilter({ onPopulateTable }: DataFilterProps) {
       return;
     }
 
-    onPopulateTable(
+    getData(
       selectedProgramId,
       selectedProgramStageId,
       selectedOrganisationUnits,
