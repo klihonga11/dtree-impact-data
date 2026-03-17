@@ -24,42 +24,42 @@ export const useDataFilter = (): DataFilterReturnType => {
     dateRange: [string | null, string | null],
     outputType: string,
   ) => {
-    console.log("start");
-    console.log(programId);
-    console.log(organisationUnits);
-    console.log(dateRange);
-    if (
-      programId == "" ||
-      organisationUnits?.length == 0 ||
-      dateRange[0] == null ||
-      dateRange[1] == null
-    ) {
-      return;
+    try {
+      const promises: Promise<IndividualsServedResponse>[] = [];
+      organisationUnits.forEach((organisationUnitId) => {
+        const url = `/dhis2/api/analytics/events/query/${programId}?${programStageId === "" ? "" : "stage=" + programStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId}&outputType=${outputType}&pageSize=1&totalPages=true`;
+        promises.push(
+          fetch(url, { credentials: "include" }).then((result) =>
+            result.json(),
+          ),
+        );
+      });
+
+      setIsLoading(true);
+      await loadResults(promises);
+    } catch (error) {
+      console.log("Error", error);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    console.log("continue");
-    const promises: Promise<IndividualsServedResponse>[] = [];
-    organisationUnits.forEach((organisationUnitId) => {
-      const url = `/dhis2/api/analytics/events/query/${programId}?${programStageId === "" ? "" : "stage=" + programStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId}&outputType=${outputType}&pageSize=1&totalPages=true`;
-      promises.push(
-        fetch(url, { credentials: "include" }).then((result) => result.json()),
-      );
-    });
-
-    setIsLoading(true);
+  const loadResults = async (
+    promises: Promise<IndividualsServedResponse>[],
+  ) => {
     const results = await Promise.all(promises);
 
     const rows: TableRowType[] = [];
     results.forEach((data) => {
+      const ou = data.metaData.dimensions.ou[0];
       rows.push({
-        id: data.metaData.dimensions.ou[0],
-        district: data.metaData.items[0].name,
+        id: ou,
+        district: data.metaData.items[ou].name,
         count: data.metaData.pager.pageCount,
       });
     });
 
     setTableRows(rows);
-    setIsLoading(false);
   };
 
   return { isLoading, tableRows, fetchData };
