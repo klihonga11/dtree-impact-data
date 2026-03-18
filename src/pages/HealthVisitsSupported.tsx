@@ -1,20 +1,17 @@
-import { Center, Loader, Space } from "@mantine/core";
+import { Space, Center, Loader } from "@mantine/core";
 import DataFilter from "../components/DataFilter";
-import { useDataFilter } from "../hooks/useDataFilter";
 import DistrictCountTable from "../components/DistrictCountTable";
-import {
-  ENDPOINT_ANALYTICS_EVENTS,
-  OUTPUT_TYPE_ENROLLMENT,
-} from "../utils/static";
+import { useDataFilter } from "../hooks/useDataFilter";
+import { ENDPOINT_ANALYTICS_EVENTS, OUTPUT_TYPE_EVENT } from "../utils/static";
 
-export default function IndividualsServed() {
+export default function HealthVisitsSupported() {
   const { isLoading, tableRows, fetchData } = useDataFilter();
 
   return (
     <>
       <DataFilter
         endPoint={ENDPOINT_ANALYTICS_EVENTS}
-        outputType={OUTPUT_TYPE_ENROLLMENT}
+        outputType={OUTPUT_TYPE_EVENT}
         getData={fetchData}
       />
 

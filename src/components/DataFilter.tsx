@@ -3,19 +3,18 @@ import { DatePickerInput } from "@mantine/dates";
 import { useState } from "react";
 import type { Program, OrganisationUnit } from "../utils/types";
 import CustomAlert from "./Alert";
-import { OUTPUT_TYPE_ENROLLMENT } from "../utils/static";
 
 type DataFilterProps = {
-  getData: (
-    programId: string,
-    programStageId: string,
-    organisationUnits: string[],
-    dateRange: [string | null, string | null],
-    outputType: string,
-  ) => void;
+  endPoint: string;
+  outputType: string;
+  getData: (urls: string[]) => void;
 };
 
-export default function DataFilter({ getData }: DataFilterProps) {
+export default function DataFilter({
+  endPoint,
+  outputType,
+  getData,
+}: DataFilterProps) {
   const [dateRange, setDateRange] = useState<[string | null, string | null]>([
     null,
     null,
@@ -66,13 +65,18 @@ export default function DataFilter({ getData }: DataFilterProps) {
       return;
     }
 
-    getData(
-      selectedProgramId,
-      selectedProgramStageId,
-      selectedOrganisationUnits,
-      dateRange,
-      OUTPUT_TYPE_ENROLLMENT,
-    );
+    getData(getUrls());
+  };
+
+  const getUrls = () => {
+    const urls: string[] = [];
+    organisationUnits.forEach((organisationUnitId) => {
+      urls.push(
+        `${endPoint}/${selectedProgramId}?${selectedProgramStageId === "" ? "" : "stage=" + selectedProgramStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId.id}&outputType=${outputType}&pageSize=1&totalPages=true`,
+      );
+    });
+
+    return urls;
   };
 
   return (

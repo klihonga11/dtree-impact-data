@@ -7,6 +7,7 @@ import { MantineProvider } from "@mantine/core";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import IndividualsServed from "./pages/IndividualsServed";
+import HealthVisitsSupported from "./pages/HealthVisitsSupported";
 
 function App() {
   return (
@@ -23,6 +24,10 @@ function App() {
             }
           >
             <Route path="individuals-served" element={<IndividualsServed />} />
+            <Route
+              path="health-visits-supported"
+              element={<HealthVisitsSupported />}
+            />
           </Route>
         </Routes>
       </AuthProvider>

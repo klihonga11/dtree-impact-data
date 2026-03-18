@@ -8,7 +8,10 @@ const data = [
   { link: "/home/individuals-served", label: "1. Individuals Served" },
   { link: "", label: "2. Improved coordination" },
   { link: "", label: "3. Government supported" },
-  { link: "", label: "4. Health visits supported" },
+  {
+    link: "/home/health-visits-supported",
+    label: "4. Health visits supported",
+  },
   { link: "", label: "5. Health workers supported" },
   { link: "", label: "6. Access" },
   { link: "", label: "7. Continuity" },
