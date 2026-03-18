@@ -4,30 +4,17 @@ import type { IndividualsServedResponse, TableRowType } from "../utils/types";
 type DataFilterReturnType = {
   isLoading: boolean;
   tableRows: TableRowType[];
-  fetchData: (
-    programId: string,
-    programStageId: string,
-    organisationUnits: string[],
-    dateRange: [string | null, string | null],
-    outputType: string,
-  ) => Promise<void>;
+  fetchData: (urls: string[]) => Promise<void>;
 };
 
 export const useDataFilter = (): DataFilterReturnType => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [tableRows, setTableRows] = useState<TableRowType[]>([]);
 
-  const fetchData = async (
-    programId: string,
-    programStageId: string,
-    organisationUnits: string[],
-    dateRange: [string | null, string | null],
-    outputType: string,
-  ) => {
+  const fetchData = async (urls: string[]) => {
     try {
       const promises: Promise<IndividualsServedResponse>[] = [];
-      organisationUnits.forEach((organisationUnitId) => {
-        const url = `/dhis2/api/analytics/events/query/${programId}?${programStageId === "" ? "" : "stage=" + programStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId}&outputType=${outputType}&pageSize=1&totalPages=true`;
+      urls.forEach((url) => {
         promises.push(
           fetch(url, { credentials: "include" }).then((result) =>
             result.json(),

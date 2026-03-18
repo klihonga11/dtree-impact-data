@@ -5,17 +5,16 @@ import type { Program, OrganisationUnit } from "../utils/types";
 import CustomAlert from "./Alert";
 
 type DataFilterProps = {
+  endPoint: string;
   outputType: string;
-  getData: (
-    programId: string,
-    programStageId: string,
-    organisationUnits: string[],
-    dateRange: [string | null, string | null],
-    outputType: string,
-  ) => void;
+  getData: (urls: string[]) => void;
 };
 
-export default function DataFilter({ outputType, getData }: DataFilterProps) {
+export default function DataFilter({
+  endPoint,
+  outputType,
+  getData,
+}: DataFilterProps) {
   const [dateRange, setDateRange] = useState<[string | null, string | null]>([
     null,
     null,
@@ -66,15 +65,18 @@ export default function DataFilter({ outputType, getData }: DataFilterProps) {
       return;
     }
 
-    // const url = `/dhis2/api/analytics/events/query/${programId}?${programStageId === "" ? "" : "stage=" + programStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId}&outputType=${outputType}&pageSize=1&totalPages=true`;
+    getData(getUrls());
+  };
 
-    getData(
-      selectedProgramId,
-      selectedProgramStageId,
-      selectedOrganisationUnits,
-      dateRange,
-      outputType,
-    );
+  const getUrls = () => {
+    const urls: string[] = [];
+    organisationUnits.forEach((organisationUnitId) => {
+      urls.push(
+        `${endPoint}/${selectedProgramId}?${selectedProgramStageId === "" ? "" : "stage=" + selectedProgramStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId.id}&outputType=${outputType}&pageSize=1&totalPages=true`,
+      );
+    });
+
+    return urls;
   };
 
   return (
