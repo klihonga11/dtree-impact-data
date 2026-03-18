@@ -3,9 +3,9 @@ import { DatePickerInput } from "@mantine/dates";
 import { useState } from "react";
 import type { Program, OrganisationUnit } from "../utils/types";
 import CustomAlert from "./Alert";
-import { OUTPUT_TYPE_ENROLLMENT } from "../utils/static";
 
 type DataFilterProps = {
+  outputType: string;
   getData: (
     programId: string,
     programStageId: string,
@@ -15,7 +15,7 @@ type DataFilterProps = {
   ) => void;
 };
 
-export default function DataFilter({ getData }: DataFilterProps) {
+export default function DataFilter({ outputType, getData }: DataFilterProps) {
   const [dateRange, setDateRange] = useState<[string | null, string | null]>([
     null,
     null,
@@ -66,12 +66,14 @@ export default function DataFilter({ getData }: DataFilterProps) {
       return;
     }
 
+    // const url = `/dhis2/api/analytics/events/query/${programId}?${programStageId === "" ? "" : "stage=" + programStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId}&outputType=${outputType}&pageSize=1&totalPages=true`;
+
     getData(
       selectedProgramId,
       selectedProgramStageId,
       selectedOrganisationUnits,
       dateRange,
-      OUTPUT_TYPE_ENROLLMENT,
+      outputType,
     );
   };
 

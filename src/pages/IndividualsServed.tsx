@@ -2,13 +2,14 @@ import { Center, Loader, Space } from "@mantine/core";
 import DataFilter from "../components/DataFilter";
 import { useDataFilter } from "../hooks/useDataFilter";
 import DistrictCountTable from "../components/DistrictCountTable";
+import { OUTPUT_TYPE_ENROLLMENT } from "../utils/static";
 
 export default function IndividualsServed() {
   const { isLoading, tableRows, fetchData } = useDataFilter();
 
   return (
     <>
-      <DataFilter getData={fetchData} />
+      <DataFilter outputType={OUTPUT_TYPE_ENROLLMENT} getData={fetchData} />
 
       <Space h="lg" />
 
