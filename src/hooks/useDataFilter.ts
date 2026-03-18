@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { IndividualsServedResponse, TableRowType } from "../utils/types";
+import type { AnalyticsEventResponse, TableRowType } from "../utils/types";
 
 type DataFilterReturnType = {
   isLoading: boolean;
@@ -13,7 +13,7 @@ export const useDataFilter = (): DataFilterReturnType => {
 
   const fetchData = async (urls: string[]) => {
     try {
-      const promises: Promise<IndividualsServedResponse>[] = [];
+      const promises: Promise<AnalyticsEventResponse>[] = [];
       urls.forEach((url) => {
         promises.push(
           fetch(url, { credentials: "include" }).then((result) =>
@@ -31,9 +31,7 @@ export const useDataFilter = (): DataFilterReturnType => {
     }
   };
 
-  const loadResults = async (
-    promises: Promise<IndividualsServedResponse>[],
-  ) => {
+  const loadResults = async (promises: Promise<AnalyticsEventResponse>[]) => {
     const results = await Promise.all(promises);
 
     const rows: TableRowType[] = [];

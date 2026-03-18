@@ -34,7 +34,7 @@ export type OrganisationUnitResponse = {
   organisationUnits: OrganisationUnit[];
 };
 
-export type IndividualsServedResponse = {
+export type AnalyticsEventResponse = {
   metaData: {
     pager: {
       page: number;
