@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import IndividualsServed from "./pages/IndividualsServed";
 import HealthVisitsSupported from "./pages/HealthVisitsSupported";
+import Access from "./pages/Access";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               path="health-visits-supported"
               element={<HealthVisitsSupported />}
             />
+            <Route path="access" element={<Access />} />
           </Route>
         </Routes>
       </AuthProvider>
