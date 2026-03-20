@@ -8,12 +8,16 @@ type DataFilterProps = {
   endPoint: string;
   outputType: string;
   getData: (urls: string[]) => void;
+  programDisabled?: boolean;
+  programStageDisabled?: boolean;
 };
 
 export default function DataFilter({
   endPoint,
   outputType,
   getData,
+  programDisabled = false,
+  programStageDisabled = false,
 }: DataFilterProps) {
   const [dateRange, setDateRange] = useState<[string | null, string | null]>([
     null,
@@ -84,6 +88,7 @@ export default function DataFilter({
       <Group justify="space-between" align="flex-end" grow>
         <NativeSelect
           label="*Program"
+          disabled={programDisabled}
           styles={{ input: { color: "black" } }}
           data={[
             { value: "", label: "", disabled: true },
@@ -98,6 +103,7 @@ export default function DataFilter({
 
         <NativeSelect
           label="Program stage"
+          disabled={programStageDisabled}
           data={[
             { value: "", label: "" },
             ...(programs
