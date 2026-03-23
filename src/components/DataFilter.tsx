@@ -10,6 +10,8 @@ type DataFilterProps = {
   getData: (urls: string[]) => void;
   programDisabled?: boolean;
   programStageDisabled?: boolean;
+  defaultProgramId?: string;
+  defaultProgramStageId?: string;
 };
 
 export default function DataFilter({
@@ -18,6 +20,8 @@ export default function DataFilter({
   getData,
   programDisabled = false,
   programStageDisabled = false,
+  defaultProgramId = "",
+  defaultProgramStageId = "",
 }: DataFilterProps) {
   const [dateRange, setDateRange] = useState<[string | null, string | null]>([
     null,
@@ -27,9 +31,11 @@ export default function DataFilter({
   const programs: Program[] = JSON.parse(
     localStorage.getItem("programs") ?? "[]",
   );
-  const [selectedProgramId, setSelectedProgramId] = useState<string>("");
-  const [selectedProgramStageId, setSelectedProgramStageId] =
-    useState<string>("");
+  const [selectedProgramId, setSelectedProgramId] =
+    useState<string>(defaultProgramId);
+  const [selectedProgramStageId, setSelectedProgramStageId] = useState<string>(
+    defaultProgramStageId,
+  );
 
   const organisationUnits: OrganisationUnit[] = JSON.parse(
     localStorage.getItem("organisationUnits") ?? "[]",
