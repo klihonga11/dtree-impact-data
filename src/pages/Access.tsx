@@ -16,6 +16,9 @@ export default function Access() {
         endPoint={ENDPOINT_ANALYTICS_ENROLLMENTS}
         outputType={OUTPUT_TYPE_ENROLLMENT}
         getData={fetchData}
+        programDisabled
+        programStageDisabled
+        defaultProgramId="NFnp1h3IMzl"
       />
 
       <Space h="lg" />
