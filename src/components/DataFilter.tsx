@@ -1,8 +1,9 @@
 import { Group, NativeSelect, MultiSelect, Button } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useState } from "react";
-import type { Program, OrganisationUnit } from "../utils/types";
+import type { Program, OrganisationUnit, UserGroup } from "../utils/types";
 import CustomAlert from "./Alert";
+import { LOCATION_TYPE_ORG_UNIT } from "../utils/static";
 
 type DataFilterProps = {
   endPoint: string;
@@ -12,6 +13,7 @@ type DataFilterProps = {
   programStageDisabled?: boolean;
   defaultProgramId?: string;
   defaultProgramStageId?: string;
+  locationType?: string;
 };
 
 export default function DataFilter({
@@ -22,6 +24,7 @@ export default function DataFilter({
   programStageDisabled = false,
   defaultProgramId = "",
   defaultProgramStageId = "",
+  locationType = LOCATION_TYPE_ORG_UNIT,
 }: DataFilterProps) {
   const [dateRange, setDateRange] = useState<[string | null, string | null]>([
     null,
@@ -37,8 +40,10 @@ export default function DataFilter({
     defaultProgramStageId,
   );
 
-  const organisationUnits: OrganisationUnit[] = JSON.parse(
-    localStorage.getItem("organisationUnits") ?? "[]",
+  const organisationUnits: OrganisationUnit[] | UserGroup[] = JSON.parse(
+    locationType === "organisationUnit"
+      ? (localStorage.getItem("organisationUnits") ?? "[]")
+      : (localStorage.getItem("userGroups") ?? "[]"),
   );
   const [selectedOrganisationUnits, setSelectedOrganisationUnits] = useState<
     string[]
@@ -81,9 +86,11 @@ export default function DataFilter({
   const getUrls = () => {
     const urls: string[] = [];
     organisationUnits.forEach((organisationUnitId) => {
-      urls.push(
-        `${endPoint}/${selectedProgramId}?${selectedProgramStageId === "" ? "" : "stage=" + selectedProgramStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId.id}&outputType=${outputType}&pageSize=1&totalPages=true`,
-      );
+      if (locationType === LOCATION_TYPE_ORG_UNIT) {
+        urls.push(
+          `${endPoint}/${selectedProgramId}?${selectedProgramStageId === "" ? "" : "stage=" + selectedProgramStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId.id}&outputType=${outputType}&pageSize=1&totalPages=true`,
+        );
+      }
     });
 
     return urls;
