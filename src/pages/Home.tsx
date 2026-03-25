@@ -12,7 +12,10 @@ const data = [
     link: "/home/health-visits-supported",
     label: "4. Health visits supported",
   },
-  { link: "", label: "5. Health workers supported" },
+  {
+    link: "/home/health-workers-supported",
+    label: "5. Health workers supported",
+  },
   { link: "/home/access", label: "6. Access" },
   { link: "", label: "7. Continuity" },
   { link: "", label: "8. Efficiency" },

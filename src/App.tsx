@@ -9,6 +9,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import IndividualsServed from "./pages/IndividualsServed";
 import HealthVisitsSupported from "./pages/HealthVisitsSupported";
 import Access from "./pages/Access";
+import HealthWorkersSupported from "./pages/HealthWorkersSupported";
 
 function App() {
   return (
@@ -28,6 +29,10 @@ function App() {
             <Route
               path="health-visits-supported"
               element={<HealthVisitsSupported />}
+            />
+            <Route
+              path="health-workers-supported"
+              element={<HealthWorkersSupported />}
             />
             <Route path="access" element={<Access />} />
           </Route>
