@@ -131,7 +131,11 @@ export default function DataFilter({
         />
 
         <MultiSelect
-          label="*Organisation unit"
+          label={
+            locationType === LOCATION_TYPE_ORG_UNIT
+              ? "*Organisation unit"
+              : "*User group"
+          }
           data={[
             { value: "all", label: "All districts" },
             ...organisationUnits.map((ou) => ({
