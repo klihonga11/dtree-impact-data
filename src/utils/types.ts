@@ -73,3 +73,15 @@ export type TableRowType = {
   district: string;
   count: number;
 };
+
+export type DataFilterData = {
+  orgUnitId: string;
+  orgUnitName: string;
+  url: string;
+};
+
+export type UserResponse = {
+  pager: {
+    total: number;
+  };
+};
