@@ -3,20 +3,20 @@ import DataFilter from "../components/DataFilter";
 import DistrictCountTable from "../components/DistrictCountTable";
 import { useDataFilter } from "../hooks/useDataFilter";
 import {
-  ENDPOINT_ANALYTICS_EVENTS,
+  ENDPOINT_USERS,
   LOCATION_TYPE_USER_GROUP,
   OUTPUT_TYPE_EVENT,
 } from "../utils/static";
 
 export default function HealthWorkersSupported() {
-  const { isLoading, tableRows, fetchData } = useDataFilter();
+  const { isLoading, tableRows, fetchUserData } = useDataFilter();
 
   return (
     <>
       <DataFilter
-        endPoint={ENDPOINT_ANALYTICS_EVENTS}
+        endPoint={ENDPOINT_USERS}
         outputType={OUTPUT_TYPE_EVENT}
-        getData={fetchData}
+        getData={fetchUserData}
         programDisabled
         programStageDisabled
         locationType={LOCATION_TYPE_USER_GROUP}
