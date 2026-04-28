@@ -1,14 +1,14 @@
 import { Group, NativeSelect, MultiSelect, Button } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useState } from "react";
-import type { Program, OrganisationUnit, UserGroup } from "../utils/types";
+import type { Program, OrganisationUnit, DataFilterData } from "../utils/types";
 import CustomAlert from "./Alert";
 import { LOCATION_TYPE_ORG_UNIT } from "../utils/static";
 
 type DataFilterProps = {
   endPoint: string;
   outputType: string;
-  getData: (urls: string[]) => void;
+  getData: (data: DataFilterData[]) => void; //TODO: instead of just urls, it should also take an optional param of an array of objects with id and name that corresponds to the urls
   programDisabled?: boolean;
   programStageDisabled?: boolean;
   defaultProgramId?: string;
@@ -30,23 +30,22 @@ export default function DataFilter({
     null,
     null,
   ]);
-
-  const programs: Program[] = JSON.parse(
-    localStorage.getItem("programs") ?? "[]",
-  );
   const [selectedProgramId, setSelectedProgramId] =
     useState<string>(defaultProgramId);
   const [selectedProgramStageId, setSelectedProgramStageId] = useState<string>(
     defaultProgramStageId,
   );
 
-  const organisationUnits: OrganisationUnit[] | UserGroup[] = JSON.parse(
+  const programs: Program[] = JSON.parse(
+    localStorage.getItem("programs") ?? "[]",
+  );
+  const organisationUnits: OrganisationUnit[] = JSON.parse(
     locationType === "organisationUnit"
       ? (localStorage.getItem("organisationUnits") ?? "[]")
       : (localStorage.getItem("userGroups") ?? "[]"),
   );
   const [selectedOrganisationUnits, setSelectedOrganisationUnits] = useState<
-    string[]
+    OrganisationUnit[]
   >([]);
 
   const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false);
@@ -54,15 +53,23 @@ export default function DataFilter({
 
   const onSelectOrgUnit = (selected: string[]) => {
     if (selected.includes("all")) {
-      setSelectedOrganisationUnits(organisationUnits.map((ou) => ou.id));
+      setSelectedOrganisationUnits(organisationUnits);
       return;
     }
 
-    setSelectedOrganisationUnits(selected);
+    const selectedOrgUnits: OrganisationUnit[] = [];
+    selected.forEach((selected) => {
+      const ou = organisationUnits.find((ou) => ou.id === selected);
+      if (ou) {
+        selectedOrgUnits.push(ou);
+      }
+    });
+
+    setSelectedOrganisationUnits(selectedOrgUnits);
   };
 
   const applyFilters = () => {
-    if (selectedProgramId == "") {
+    if (selectedProgramId == "" && locationType === LOCATION_TYPE_ORG_UNIT) {
       setAlertMessage("Please select a program");
       setIsAlertVisible(true);
       return;
@@ -84,14 +91,24 @@ export default function DataFilter({
   };
 
   const getUrls = () => {
-    const urls: string[] = [];
-    organisationUnits.forEach((organisationUnitId) => {
-      if (locationType === LOCATION_TYPE_ORG_UNIT) {
-        urls.push(
-          `${endPoint}/${selectedProgramId}?${selectedProgramStageId === "" ? "" : "stage=" + selectedProgramStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId.id}&outputType=${outputType}&pageSize=1&totalPages=true`,
-        );
-      }
-    });
+    const urls: DataFilterData[] = [];
+    if (locationType === LOCATION_TYPE_ORG_UNIT) {
+      selectedOrganisationUnits.forEach((organisationUnit) => {
+        urls.push({
+          orgUnitId: organisationUnit.id,
+          orgUnitName: organisationUnit.displayName,
+          url: `${endPoint}/${selectedProgramId}?${selectedProgramStageId === "" ? "" : "stage=" + selectedProgramStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnit.id}&outputType=${outputType}&pageSize=1&totalPages=true`,
+        });
+      });
+    } else {
+      selectedOrganisationUnits.forEach((organisationUnit) => {
+        urls.push({
+          orgUnitId: organisationUnit.id,
+          orgUnitName: organisationUnit.displayName,
+          url: `${endPoint}?filter=userGroups.id:eq:${organisationUnit.id}&filter=lastLogin:ge:${dateRange[0]}&filter=lastLogin:le:${dateRange[1]}&pageSize=1`,
+        });
+      });
+    }
 
     return urls;
   };
@@ -143,7 +160,7 @@ export default function DataFilter({
               label: ou.displayName,
             })),
           ]}
-          value={selectedOrganisationUnits}
+          value={selectedOrganisationUnits.map((ou) => ou.id)}
           onChange={onSelectOrgUnit}
           clearable
           leftSection={
