@@ -91,26 +91,24 @@ export default function DataFilter({
   };
 
   const getUrls = () => {
-    const urls: DataFilterData[] = [];
-    if (locationType === LOCATION_TYPE_ORG_UNIT) {
-      selectedOrganisationUnits.forEach((organisationUnit) => {
-        urls.push({
-          orgUnitId: organisationUnit.id,
-          orgUnitName: organisationUnit.displayName,
-          url: `${endPoint}/${selectedProgramId}?${selectedProgramStageId === "" ? "" : "stage=" + selectedProgramStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnit.id}&outputType=${outputType}&pageSize=1&totalPages=true`,
-        });
-      });
-    } else {
-      selectedOrganisationUnits.forEach((organisationUnit) => {
-        urls.push({
-          orgUnitId: organisationUnit.id,
-          orgUnitName: organisationUnit.displayName,
-          url: `${endPoint}?filter=userGroups.id:eq:${organisationUnit.id}&filter=lastLogin:ge:${dateRange[0]}&filter=lastLogin:le:${dateRange[1]}&pageSize=1`,
-        });
-      });
-    }
+    return selectedOrganisationUnits.map((organisationUnit) => {
+      const base = {
+        orgUnitId: organisationUnit.id,
+        orgUnitName: organisationUnit.displayName,
+      };
 
-    return urls;
+      const stageParam =
+        selectedProgramStageId === "" ? "" : `stage=${selectedProgramStageId}&`;
+
+      let url: string = "";
+      if (locationType == LOCATION_TYPE_ORG_UNIT) {
+        url = `${endPoint}/${selectedProgramId}?${stageParam}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnit.id}&outputType=${outputType}&pageSize=1&totalPages=true`;
+      } else {
+        url = `${endPoint}?filter=userGroups.id:eq:${organisationUnit.id}&filter=lastLogin:ge:${dateRange[0]}&filter=lastLogin:le:${dateRange[1]}&pageSize=1`;
+      }
+
+      return { ...base, url };
+    });
   };
 
   return (
