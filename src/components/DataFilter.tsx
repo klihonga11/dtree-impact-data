@@ -8,7 +8,7 @@ import { LOCATION_TYPE_ORG_UNIT } from "../utils/static";
 type DataFilterProps = {
   endPoint: string;
   outputType: string;
-  getData: (data: DataFilterData[]) => void; //TODO: instead of just urls, it should also take an optional param of an array of objects with id and name that corresponds to the urls
+  getData: (data: DataFilterData[]) => void;
   programDisabled?: boolean;
   programStageDisabled?: boolean;
   defaultProgramId?: string;
