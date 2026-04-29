@@ -1,37 +1,51 @@
 import { Group, NativeSelect, MultiSelect, Button } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useState } from "react";
-import type { Program, OrganisationUnit } from "../utils/types";
+import type { Program, OrganisationUnit, DataFilterData } from "../utils/types";
 import CustomAlert from "./Alert";
+import { LOCATION_TYPE_ORG_UNIT } from "../utils/static";
 
 type DataFilterProps = {
   endPoint: string;
   outputType: string;
-  getData: (urls: string[]) => void;
+  getData: (data: DataFilterData[]) => void;
+  programDisabled?: boolean;
+  programStageDisabled?: boolean;
+  defaultProgramId?: string;
+  defaultProgramStageId?: string;
+  locationType?: string;
 };
 
 export default function DataFilter({
   endPoint,
   outputType,
   getData,
+  programDisabled = false,
+  programStageDisabled = false,
+  defaultProgramId = "",
+  defaultProgramStageId = "",
+  locationType = LOCATION_TYPE_ORG_UNIT,
 }: DataFilterProps) {
   const [dateRange, setDateRange] = useState<[string | null, string | null]>([
     null,
     null,
   ]);
+  const [selectedProgramId, setSelectedProgramId] =
+    useState<string>(defaultProgramId);
+  const [selectedProgramStageId, setSelectedProgramStageId] = useState<string>(
+    defaultProgramStageId,
+  );
 
   const programs: Program[] = JSON.parse(
     localStorage.getItem("programs") ?? "[]",
   );
-  const [selectedProgramId, setSelectedProgramId] = useState<string>("");
-  const [selectedProgramStageId, setSelectedProgramStageId] =
-    useState<string>("");
-
   const organisationUnits: OrganisationUnit[] = JSON.parse(
-    localStorage.getItem("organisationUnits") ?? "[]",
+    locationType === "organisationUnit"
+      ? (localStorage.getItem("organisationUnits") ?? "[]")
+      : (localStorage.getItem("userGroups") ?? "[]"),
   );
   const [selectedOrganisationUnits, setSelectedOrganisationUnits] = useState<
-    string[]
+    OrganisationUnit[]
   >([]);
 
   const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false);
@@ -39,15 +53,23 @@ export default function DataFilter({
 
   const onSelectOrgUnit = (selected: string[]) => {
     if (selected.includes("all")) {
-      setSelectedOrganisationUnits(organisationUnits.map((ou) => ou.id));
+      setSelectedOrganisationUnits(organisationUnits);
       return;
     }
 
-    setSelectedOrganisationUnits(selected);
+    const selectedOrgUnits: OrganisationUnit[] = [];
+    selected.forEach((selected) => {
+      const ou = organisationUnits.find((ou) => ou.id === selected);
+      if (ou) {
+        selectedOrgUnits.push(ou);
+      }
+    });
+
+    setSelectedOrganisationUnits(selectedOrgUnits);
   };
 
   const applyFilters = () => {
-    if (selectedProgramId == "") {
+    if (selectedProgramId == "" && locationType === LOCATION_TYPE_ORG_UNIT) {
       setAlertMessage("Please select a program");
       setIsAlertVisible(true);
       return;
@@ -69,14 +91,24 @@ export default function DataFilter({
   };
 
   const getUrls = () => {
-    const urls: string[] = [];
-    organisationUnits.forEach((organisationUnitId) => {
-      urls.push(
-        `${endPoint}/${selectedProgramId}?${selectedProgramStageId === "" ? "" : "stage=" + selectedProgramStageId + "&"}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnitId.id}&outputType=${outputType}&pageSize=1&totalPages=true`,
-      );
-    });
+    return selectedOrganisationUnits.map((organisationUnit) => {
+      const base = {
+        orgUnitId: organisationUnit.id,
+        orgUnitName: organisationUnit.displayName,
+      };
 
-    return urls;
+      const stageParam =
+        selectedProgramStageId === "" ? "" : `stage=${selectedProgramStageId}&`;
+
+      let url: string = "";
+      if (locationType == LOCATION_TYPE_ORG_UNIT) {
+        url = `${endPoint}/${selectedProgramId}?${stageParam}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnit.id}&outputType=${outputType}&pageSize=1&totalPages=true`;
+      } else {
+        url = `${endPoint}?filter=userGroups.id:eq:${organisationUnit.id}&filter=lastLogin:ge:${dateRange[0]}&filter=lastLogin:le:${dateRange[1]}&pageSize=1`;
+      }
+
+      return { ...base, url };
+    });
   };
 
   return (
@@ -84,6 +116,7 @@ export default function DataFilter({
       <Group justify="space-between" align="flex-end" grow>
         <NativeSelect
           label="*Program"
+          disabled={programDisabled}
           styles={{ input: { color: "black" } }}
           data={[
             { value: "", label: "", disabled: true },
@@ -98,6 +131,7 @@ export default function DataFilter({
 
         <NativeSelect
           label="Program stage"
+          disabled={programStageDisabled}
           data={[
             { value: "", label: "" },
             ...(programs
@@ -112,7 +146,11 @@ export default function DataFilter({
         />
 
         <MultiSelect
-          label="*Organisation unit"
+          label={
+            locationType === LOCATION_TYPE_ORG_UNIT
+              ? "*Organisation unit"
+              : "*User group"
+          }
           data={[
             { value: "all", label: "All districts" },
             ...organisationUnits.map((ou) => ({
@@ -120,7 +158,7 @@ export default function DataFilter({
               label: ou.displayName,
             })),
           ]}
-          value={selectedOrganisationUnits}
+          value={selectedOrganisationUnits.map((ou) => ou.id)}
           onChange={onSelectOrgUnit}
           clearable
           leftSection={

@@ -34,6 +34,21 @@ export type OrganisationUnitResponse = {
   organisationUnits: OrganisationUnit[];
 };
 
+export type UserGroup = {
+  id: string;
+  displayName: string;
+};
+
+export type UserGroupResponse = {
+  pager: {
+    page: number;
+    total: number;
+    pageSize: number;
+    pageCount: number;
+  };
+  userGroups: UserGroup[];
+};
+
 export type AnalyticsEventResponse = {
   metaData: {
     pager: {
@@ -57,4 +72,16 @@ export type TableRowType = {
   id: string;
   district: string;
   count: number;
+};
+
+export type DataFilterData = {
+  orgUnitId: string;
+  orgUnitName: string;
+  url: string;
+};
+
+export type UserResponse = {
+  pager: {
+    total: number;
+  };
 };

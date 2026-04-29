@@ -1,29 +1,43 @@
 import { useState } from "react";
-import type { AnalyticsEventResponse, TableRowType } from "../utils/types";
+import type {
+  AnalyticsEventResponse,
+  TableRowType,
+  DataFilterData,
+  UserResponse,
+} from "../utils/types";
 
 type DataFilterReturnType = {
   isLoading: boolean;
   tableRows: TableRowType[];
-  fetchData: (urls: string[]) => Promise<void>;
+  fetchData: (data: DataFilterData[]) => Promise<void>;
+  fetchUserData: (data: DataFilterData[]) => Promise<void>;
 };
 
 export const useDataFilter = (): DataFilterReturnType => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [tableRows, setTableRows] = useState<TableRowType[]>([]);
 
-  const fetchData = async (urls: string[]) => {
+  const fetchAndLoad = async <T>(
+    data: DataFilterData[],
+    extractCount: (response: T) => number,
+  ) => {
     try {
-      const promises: Promise<AnalyticsEventResponse>[] = [];
-      urls.forEach((url) => {
-        promises.push(
-          fetch(url, { credentials: "include" }).then((result) =>
-            result.json(),
-          ),
-        );
-      });
-
       setIsLoading(true);
-      await loadResults(promises);
+
+      const results = await Promise.all(
+        data.map(async (d) => {
+          const res = await fetch(d.url, { credentials: "include" });
+          return res.json() as Promise<T>;
+        }),
+      );
+
+      const rows: TableRowType[] = results.map((result, index) => ({
+        id: data[index].orgUnitId,
+        district: data[index].orgUnitName,
+        count: extractCount(result),
+      }));
+
+      setTableRows(rows);
     } catch (error) {
       console.log("Error", error);
     } finally {
@@ -31,21 +45,14 @@ export const useDataFilter = (): DataFilterReturnType => {
     }
   };
 
-  const loadResults = async (promises: Promise<AnalyticsEventResponse>[]) => {
-    const results = await Promise.all(promises);
+  const fetchData = (data: DataFilterData[]) =>
+    fetchAndLoad<AnalyticsEventResponse>(
+      data,
+      (result) => result.metaData.pager.pageCount,
+    );
 
-    const rows: TableRowType[] = [];
-    results.forEach((data) => {
-      const ou = data.metaData.dimensions.ou[0];
-      rows.push({
-        id: ou,
-        district: data.metaData.items[ou].name,
-        count: data.metaData.pager.pageCount,
-      });
-    });
+  const fetchUserData = (userData: DataFilterData[]) =>
+    fetchAndLoad<UserResponse>(userData, (result) => result.pager.total);
 
-    setTableRows(rows);
-  };
-
-  return { isLoading, tableRows, fetchData };
+  return { isLoading, tableRows, fetchData, fetchUserData };
 };

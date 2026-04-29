@@ -3,22 +3,23 @@ import DataFilter from "../components/DataFilter";
 import DistrictCountTable from "../components/DistrictCountTable";
 import { useDataFilter } from "../hooks/useDataFilter";
 import {
-  ENDPOINT_ANALYTICS_ENROLLMENTS,
-  OUTPUT_TYPE_ENROLLMENT,
+  ENDPOINT_USERS,
+  LOCATION_TYPE_USER_GROUP,
+  OUTPUT_TYPE_EVENT,
 } from "../utils/static";
 
-export default function Access() {
-  const { isLoading, tableRows, fetchData } = useDataFilter();
+export default function HealthWorkersSupported() {
+  const { isLoading, tableRows, fetchUserData } = useDataFilter();
 
   return (
     <>
       <DataFilter
-        endPoint={ENDPOINT_ANALYTICS_ENROLLMENTS}
-        outputType={OUTPUT_TYPE_ENROLLMENT}
-        getData={fetchData}
+        endPoint={ENDPOINT_USERS}
+        outputType={OUTPUT_TYPE_EVENT}
+        getData={fetchUserData}
         programDisabled
         programStageDisabled
-        defaultProgramId="NFnp1h3IMzl"
+        locationType={LOCATION_TYPE_USER_GROUP}
       />
 
       <Space h="lg" />
