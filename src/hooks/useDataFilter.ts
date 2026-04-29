@@ -17,57 +17,27 @@ export const useDataFilter = (): DataFilterReturnType => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [tableRows, setTableRows] = useState<TableRowType[]>([]);
 
-  const fetchData = async (data: DataFilterData[]) => {
-    try {
-      const promises: Promise<AnalyticsEventResponse>[] = [];
-      data.forEach((d) => {
-        promises.push(
-          fetch(d.url, { credentials: "include" }).then((result) =>
-            result.json(),
-          ),
-        );
-      });
-
-      setIsLoading(true);
-      await loadResults(promises, data);
-    } catch (error) {
-      console.log("Error", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const loadResults = async (
-    promises: Promise<AnalyticsEventResponse>[],
+  const fetchAndLoad = async <T>(
     data: DataFilterData[],
+    extractCount: (response: T) => number,
   ) => {
-    const results = await Promise.all(promises);
+    try {
+      setIsLoading(true);
 
-    const rows: TableRowType[] = [];
-    results.forEach((result, index) => {
-      rows.push({
+      const results = await Promise.all(
+        data.map(async (d) => {
+          const res = await fetch(d.url, { credentials: "include" });
+          return res.json() as Promise<T>;
+        }),
+      );
+
+      const rows: TableRowType[] = results.map((result, index) => ({
         id: data[index].orgUnitId,
         district: data[index].orgUnitName,
-        count: result.metaData.pager.pageCount,
-      });
-    });
+        count: extractCount(result),
+      }));
 
-    setTableRows(rows);
-  };
-
-  const fetchUserData = async (userData: DataFilterData[]) => {
-    try {
-      const promises: Promise<UserResponse>[] = [];
-      userData.forEach((ud) => {
-        promises.push(
-          fetch(ud.url, { credentials: "include" }).then((result) =>
-            result.json(),
-          ),
-        );
-      });
-
-      setIsLoading(true);
-      await loadUserResults(promises, userData);
+      setTableRows(rows);
     } catch (error) {
       console.log("Error", error);
     } finally {
@@ -75,23 +45,14 @@ export const useDataFilter = (): DataFilterReturnType => {
     }
   };
 
-  const loadUserResults = async (
-    promises: Promise<UserResponse>[],
-    userData: DataFilterData[],
-  ) => {
-    const results = await Promise.all(promises);
+  const fetchData = (data: DataFilterData[]) =>
+    fetchAndLoad<AnalyticsEventResponse>(
+      data,
+      (result) => result.metaData.pager.pageCount,
+    );
 
-    const rows: TableRowType[] = [];
-    results.forEach((data, index) => {
-      rows.push({
-        id: userData[index].orgUnitId,
-        district: userData[index].orgUnitName,
-        count: data.pager.total,
-      });
-    });
-
-    setTableRows(rows);
-  };
+  const fetchUserData = (userData: DataFilterData[]) =>
+    fetchAndLoad<UserResponse>(userData, (result) => result.pager.total);
 
   return { isLoading, tableRows, fetchData, fetchUserData };
 };
