@@ -1,5 +1,6 @@
-import { Table } from "@mantine/core";
+import { Switch, Table } from "@mantine/core";
 import type { TableRowType } from "../utils/types";
+import { useState } from "react";
 
 type DistrictCountTableProps = {
   tableRows: TableRowType[];
@@ -7,16 +8,25 @@ type DistrictCountTableProps = {
 export default function DistrictCountTable({
   tableRows,
 }: DistrictCountTableProps) {
-  const rows = tableRows.map((element) => (
-    <Table.Tr key={element.id}>
+  const [hideZeroes, setHideZeroes] = useState<boolean>(true);
+
+  const rows = tableRows.map((element) => {
+    if (hideZeroes && element.count === 0) {
+      return;
+    }
+
+    return <Table.Tr key={element.id}>
       <Table.Td>{element.district}</Table.Td>
       <Table.Td>{element.count}</Table.Td>
     </Table.Tr>
-  ));
+  });
 
   return (
     <Table highlightOnHover stickyHeader>
       <Table.Thead>
+        <Table.Tr>
+          <Switch p={8} checked={hideZeroes} onChange={(event) => setHideZeroes(event.currentTarget.checked)} label="Hide zeroes"/>
+        </Table.Tr>
         <Table.Tr>
           <Table.Th>District</Table.Th>
           <Table.Th>Count</Table.Th>
