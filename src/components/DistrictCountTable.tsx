@@ -20,6 +20,8 @@ export default function DistrictCountTable({
     </Table.Tr>
   });
 
+  //TODO: Reduce the width of the number column
+
   return (
     <Table highlightOnHover stickyHeader>
       <Table.Thead>
@@ -27,9 +29,9 @@ export default function DistrictCountTable({
           <Switch p={8} checked={hideZeroes} onChange={(event) => setHideZeroes(event.currentTarget.checked)} label="Hide zeroes"/>
         </Table.Tr>
         <Table.Tr>
-          <Table.Th>#</Table.Th>
+          <Table.Th style={{ width: 1, whiteSpace: 'nowrap' }}>#</Table.Th>
           <Table.Th>District</Table.Th>
-          <Table.Th>Count</Table.Th>
+          <Table.Th >Count</Table.Th>
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>
