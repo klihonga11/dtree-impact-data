@@ -2,7 +2,8 @@ import { Outlet, useNavigate, NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 import classes from "../css/NavbarSimple.module.css";
-import { Container, Text } from "@mantine/core";
+import { Container, Image, Text } from "@mantine/core";
+import logo from "../assets/D-tree logo.png"
 
 const data = [
   { link: "/home/individuals-served", label: "1. Individuals Served" },
@@ -52,26 +53,29 @@ export default function HomePage() {
 
   return (
     <>
-      <header className={classes.header}>
-        <Container size="md" className={classes.inner}>
-          <Text>D-tree Impact Management Data</Text>
-        </Container>
-      </header>
-
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", height: "100vh" }}>
         <nav className={classes.navbar}>
-          <div className={classes.navbarMain}>{links}</div>
+            <Image src={logo} height={150} w="auto" fit="contain"/>
+            <div className={classes.navbarMain}>{links}</div>
 
-          <div className={classes.footer}>
-            <a href="#" className={classes.link} onClick={handleLogout}>
-              <span>Logout</span>
-            </a>
+            <div className={classes.footer}>
+              <a href="#" className={classes.link} onClick={handleLogout}>
+                <span>Logout</span>
+              </a>
+            </div>
+          </nav>
+
+          <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+            <header className={classes.header}>
+              <Container style={{margin: 8}} className={classes.inner}>
+                <Text size="xl" fw={700}>D-tree Impact Management Data</Text>
+              </Container>
+            </header>
+
+             <div style={{ flex: 1, padding: "2rem" }}>
+              <Outlet />
+            </div>
           </div>
-        </nav>
-
-        <div style={{ flex: 1, padding: "2rem" }}>
-          <Outlet />
-        </div>
       </div>
     </>
   );
