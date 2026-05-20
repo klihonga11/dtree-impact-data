@@ -2,7 +2,8 @@ import { Outlet, useNavigate, NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 import classes from "../css/NavbarSimple.module.css";
-import { Container, Text } from "@mantine/core";
+import { Container, Image, Text } from "@mantine/core";
+import logo from "../assets/D-tree logo.png"
 
 const data = [
   { link: "/home/individuals-served", label: "1. Individuals Served" },
@@ -60,6 +61,7 @@ export default function HomePage() {
 
       <div style={{ display: "flex" }}>
         <nav className={classes.navbar}>
+          <Image src={logo} height={100} w="auto" fit="contain"/>
           <div className={classes.navbarMain}>{links}</div>
 
           <div className={classes.footer}>
