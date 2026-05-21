@@ -13,6 +13,8 @@ type DataFilterProps = {
   programStageDisabled?: boolean;
   defaultProgramId?: string;
   defaultProgramStageId?: string;
+  defaultDataElementId?: string;
+  defaultDataElementValue?: string;
   locationType?: string;
 };
 
@@ -24,6 +26,8 @@ export default function DataFilter({
   programStageDisabled = false,
   defaultProgramId = "",
   defaultProgramStageId = "",
+  defaultDataElementId = "",
+  defaultDataElementValue = "",
   locationType = LOCATION_TYPE_ORG_UNIT,
 }: DataFilterProps) {
   const [dateRange, setDateRange] = useState<[string | null, string | null]>([
@@ -100,9 +104,11 @@ export default function DataFilter({
       const stageParam =
         selectedProgramStageId === "" ? "" : `stage=${selectedProgramStageId}&`;
 
+      const dataElementParam = defaultDataElementId === "" ? "" : `filter=${defaultDataElementId}:EQ:${defaultDataElementValue}&`
+
       let url: string = "";
       if (locationType == LOCATION_TYPE_ORG_UNIT) {
-        url = `${endPoint}/${selectedProgramId}?${stageParam}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnit.id}&outputType=${outputType}&pageSize=1&totalPages=true`;
+        url = `${endPoint}/${selectedProgramId}?${stageParam}${dataElementParam}startDate=${dateRange[0]}&endDate=${dateRange[1]}&dimension=ou:${organisationUnit.id}&outputType=${outputType}&pageSize=1&totalPages=true`;
       } else {
         url = `${endPoint}?filter=userGroups.id:eq:${organisationUnit.id}&filter=lastLogin:ge:${dateRange[0]}&filter=lastLogin:le:${dateRange[1]}&pageSize=1`;
       }
