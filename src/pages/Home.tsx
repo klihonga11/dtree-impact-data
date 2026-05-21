@@ -18,7 +18,7 @@ const data = [
     label: "5. Health workers supported",
   },
   { link: "/home/access", label: "6. Access" },
-  { link: "", label: "7. Continuity" },
+  { link: "/home/continuity", label: "7. Continuity" },
   { link: "", label: "8. Efficiency" },
   { link: "", label: "9. Individual Agency" },
   { link: "", label: "10. Effectiveness" },

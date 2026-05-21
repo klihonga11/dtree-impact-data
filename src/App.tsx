@@ -10,6 +10,7 @@ import IndividualsServed from "./pages/IndividualsServed";
 import HealthVisitsSupported from "./pages/HealthVisitsSupported";
 import Access from "./pages/Access";
 import HealthWorkersSupported from "./pages/HealthWorkersSupported";
+import Continuity from "./pages/Continuty";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
               element={<HealthWorkersSupported />}
             />
             <Route path="access" element={<Access />} />
+            <Route path="continuity" element={<Continuity />} />
           </Route>
         </Routes>
       </AuthProvider>
