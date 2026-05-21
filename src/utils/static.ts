@@ -7,4 +7,5 @@ export const ENDPOINT_USERS = "/dhis2/api/users.json";
 export const LOCATION_TYPE_ORG_UNIT = "organisationUnit";
 export const LOCATION_TYPE_USER_GROUP = "userGroup";
 export const PERSON_REGISTER_PROGRAM_ID = "NFnp1h3IMzl"
+export const FAMILY_PLANNING_PROGRAM_STAGE_ID = "cOvFHTZSl9O"
 export const CBMNC_WOMAN_PROGRAM_ID = "cJEpYzKPHqg"
