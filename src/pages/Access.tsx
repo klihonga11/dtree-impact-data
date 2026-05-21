@@ -4,7 +4,9 @@ import DistrictCountTable from "../components/DistrictCountTable";
 import { useDataFilter } from "../hooks/useDataFilter";
 import {
   ENDPOINT_ANALYTICS_ENROLLMENTS,
+  FAMILY_PLANNING_PROGRAM_STAGE_ID,
   OUTPUT_TYPE_ENROLLMENT,
+  PERSON_REGISTER_PROGRAM_ID,
 } from "../utils/static";
 
 export default function Access() {
@@ -18,7 +20,8 @@ export default function Access() {
         getData={fetchData}
         programDisabled
         programStageDisabled
-        defaultProgramId="NFnp1h3IMzl"
+        defaultProgramId={PERSON_REGISTER_PROGRAM_ID}
+        defaultProgramStageId={FAMILY_PLANNING_PROGRAM_STAGE_ID}
       />
 
       <Space h="lg" />
