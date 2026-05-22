@@ -11,6 +11,7 @@ import HealthVisitsSupported from "./pages/HealthVisitsSupported";
 import Access from "./pages/Access";
 import HealthWorkersSupported from "./pages/HealthWorkersSupported";
 import Continuity from "./pages/Continuty";
+import IndividualAgency from "./pages/IndividualAgency";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
             />
             <Route path="access" element={<Access />} />
             <Route path="continuity" element={<Continuity />} />
+            <Route path="individual-agency" element={<IndividualAgency />} />
           </Route>
         </Routes>
       </AuthProvider>
