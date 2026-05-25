@@ -158,7 +158,7 @@ export default function DataFilter({
               : "*User group"
           }
           data={[
-            { value: "all", label: "All districts" },
+            { value: "all", label: locationType === LOCATION_TYPE_ORG_UNIT ? "All districts" : "All user groups" },
             ...organisationUnits.map((ou) => ({
               value: ou.id,
               label: ou.displayName,
@@ -172,7 +172,7 @@ export default function DataFilter({
               <span
                 style={{ fontSize: 14, color: "black", whiteSpace: "nowrap" }}
               >
-                {selectedOrganisationUnits.length} districts selected
+                {selectedOrganisationUnits.length} {locationType === LOCATION_TYPE_ORG_UNIT ? "districts" : "user groups"} selected
               </span>
             ) : null
           }
