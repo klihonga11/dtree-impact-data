@@ -1,12 +1,15 @@
 import { Switch, Table } from "@mantine/core";
 import type { TableRowType } from "../utils/types";
 import { useState } from "react";
+import { LOCATION_TYPE_ORG_UNIT } from "../utils/static";
 
 type DistrictCountTableProps = {
   tableRows: TableRowType[];
+  locationType?: string; 
 };
 export default function DistrictCountTable({
   tableRows,
+  locationType = LOCATION_TYPE_ORG_UNIT
 }: DistrictCountTableProps) {
   const [hideZeroes, setHideZeroes] = useState<boolean>(true);
 
@@ -30,7 +33,7 @@ export default function DistrictCountTable({
         </Table.Tr>
         <Table.Tr>
           <Table.Th style={{ width: 1, whiteSpace: 'nowrap' }}>#</Table.Th>
-          <Table.Th>District</Table.Th>
+          <Table.Th>{locationType === LOCATION_TYPE_ORG_UNIT ? "District" : "User group"}</Table.Th>
           <Table.Th >Count</Table.Th>
         </Table.Tr>
       </Table.Thead>

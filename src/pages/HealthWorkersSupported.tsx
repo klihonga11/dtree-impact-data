@@ -29,7 +29,7 @@ export default function HealthWorkersSupported() {
           <Loader />
         </Center>
       ) : (
-        <DistrictCountTable tableRows={tableRows} />
+        <DistrictCountTable tableRows={tableRows} locationType={LOCATION_TYPE_USER_GROUP} />
       )}
     </>
   );
