@@ -19,7 +19,7 @@ const data = [
   },
   { link: "/home/access", label: "6. Access" },
   { link: "/home/continuity", label: "7. Continuity" },
-  { link: "", label: "8. Efficiency" },
+  { link: "/home/efficiency", label: "8. Efficiency" },
   { link: "/home/individual-agency", label: "9. Individual Agency" },
   { link: "", label: "10. Effectiveness" },
 ];

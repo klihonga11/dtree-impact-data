@@ -14,6 +14,7 @@ import Continuity from "./pages/Continuty";
 import IndividualAgency from "./pages/IndividualAgency";
 import ImprovedCoordination from "./pages/ImprovedCoordination";
 import GovernmentSupported from "./pages/GovernmentSupported";
+import Efficiency from "./pages/Efficiency";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             />
             <Route path="access" element={<Access />} />
             <Route path="continuity" element={<Continuity />} />
+            <Route path="efficiency" element={<Efficiency />} />
             <Route path="individual-agency" element={<IndividualAgency />} />
           </Route>
         </Routes>
