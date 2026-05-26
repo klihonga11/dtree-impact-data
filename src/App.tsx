@@ -13,6 +13,7 @@ import HealthWorkersSupported from "./pages/HealthWorkersSupported";
 import Continuity from "./pages/Continuty";
 import IndividualAgency from "./pages/IndividualAgency";
 import ImprovedCoordination from "./pages/ImprovedCoordination";
+import GovernmentSupported from "./pages/GovernmentSupported";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           >
             <Route path="individuals-served" element={<IndividualsServed />} />
             <Route path="improved-coordination" element={<ImprovedCoordination />} />
+            <Route path="government-supported" element={<GovernmentSupported />} />
             <Route
               path="health-visits-supported"
               element={<HealthVisitsSupported />}
