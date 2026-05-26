@@ -7,8 +7,8 @@ import logo from "../assets/D-tree logo.png"
 
 const data = [
   { link: "/home/individuals-served", label: "1. Individuals Served" },
-  { link: "", label: "2. Improved coordination" },
-  { link: "", label: "3. Government supported" },
+  { link: "/home/improved-coordination", label: "2. Improved coordination" },
+  { link: "/home/government-supported", label: "3. Government supported" },
   {
     link: "/home/health-visits-supported",
     label: "4. Health visits supported",
@@ -19,9 +19,9 @@ const data = [
   },
   { link: "/home/access", label: "6. Access" },
   { link: "/home/continuity", label: "7. Continuity" },
-  { link: "", label: "8. Efficiency" },
+  { link: "/home/efficiency", label: "8. Efficiency" },
   { link: "/home/individual-agency", label: "9. Individual Agency" },
-  { link: "", label: "10. Effectiveness" },
+  { link: "/home/effectiveness", label: "10. Effectiveness" },
 ];
 
 export default function HomePage() {

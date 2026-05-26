@@ -67,3 +67,8 @@
   width: 25px;
   height: 25px;
 }
+
+.active {
+  background-color: var(--mantine-color-blue-light);
+      color: var(--mantine-color-blue-light-color);
+}
