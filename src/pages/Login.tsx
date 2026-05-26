@@ -23,7 +23,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/home", { replace: true });
+      navigate("/home/individuals-served", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
