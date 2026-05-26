@@ -12,6 +12,7 @@ import Access from "./pages/Access";
 import HealthWorkersSupported from "./pages/HealthWorkersSupported";
 import Continuity from "./pages/Continuty";
 import IndividualAgency from "./pages/IndividualAgency";
+import ImprovedCoordination from "./pages/ImprovedCoordination";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             }
           >
             <Route path="individuals-served" element={<IndividualsServed />} />
+            <Route path="improved-coordination" element={<ImprovedCoordination />} />
             <Route
               path="health-visits-supported"
               element={<HealthVisitsSupported />}

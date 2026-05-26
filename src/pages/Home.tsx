@@ -7,7 +7,7 @@ import logo from "../assets/D-tree logo.png"
 
 const data = [
   { link: "/home/individuals-served", label: "1. Individuals Served" },
-  { link: "", label: "2. Improved coordination" },
+  { link: "/home/improved-coordination", label: "2. Improved coordination" },
   { link: "", label: "3. Government supported" },
   {
     link: "/home/health-visits-supported",
