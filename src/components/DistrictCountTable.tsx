@@ -29,7 +29,10 @@ export default function DistrictCountTable({
     <Table highlightOnHover stickyHeader>
       <Table.Thead>
         <Table.Tr>
-          <Switch p={8} checked={hideZeroes} onChange={(event) => setHideZeroes(event.currentTarget.checked)} label="Hide zeroes"/>
+          <Table.Td>
+            <Switch p={8} checked={hideZeroes} onChange={(event) => setHideZeroes(event.currentTarget.checked)} label="Hide zeroes"/>
+          </Table.Td>
+          
         </Table.Tr>
         <Table.Tr>
           <Table.Th style={{ width: 1, whiteSpace: 'nowrap' }}>#</Table.Th>
