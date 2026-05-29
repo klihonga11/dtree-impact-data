@@ -1,4 +1,4 @@
-import { Switch, Table } from "@mantine/core";
+import { Group, Space, Switch, Table } from "@mantine/core";
 import type { TableRowType } from "../utils/types";
 import { useState } from "react";
 import { LOCATION_TYPE_ORG_UNIT } from "../utils/static";
@@ -12,10 +12,12 @@ export default function DistrictCountTable({
   locationType = LOCATION_TYPE_ORG_UNIT
 }: DistrictCountTableProps) {
   const [hideZeroes, setHideZeroes] = useState<boolean>(true);
+  const [sortByCount, setSortByCount] = useState<boolean>(false);
 
-  const districts = hideZeroes ? tableRows.filter((row) => row.count > 0): tableRows;
+  const filtered = hideZeroes ? tableRows.filter((row) => row.count > 0): tableRows;
+  const sorted = sortByCount ? filtered.sort((a,b) => b.count - a.count) : filtered
 
-  const rows = districts.map((element, index) => {
+  const rows = sorted.map((element, index) => {
     return <Table.Tr key={element.id}>
       <Table.Td>{index + 1}</Table.Td>
       <Table.Td>{element.district}</Table.Td>
@@ -27,7 +29,11 @@ export default function DistrictCountTable({
 
   return (
     <>
-      <Switch p={8} checked={hideZeroes} onChange={(event) => setHideZeroes(event.currentTarget.checked)} label="Hide zeroes"/>
+      <Group>
+        <Switch checked={hideZeroes} onChange={(event) => setHideZeroes(event.currentTarget.checked)} label="Hide zeroes"/>
+        <Switch checked={sortByCount} onChange={(event) => setSortByCount(event.currentTarget.checked)} label="Sort by count"/>  
+      </Group>
+      <Space h="lg"/>
       <Table.ScrollContainer minWidth={500} maxHeight={525}>
         <Table highlightOnHover stickyHeader>
           <Table.Thead>
