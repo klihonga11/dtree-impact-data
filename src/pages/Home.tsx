@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import classes from "../css/NavbarSimple.module.css";
 import { Container, Image, Text } from "@mantine/core";
 import logo from "../assets/D-tree logo.png"
+import ConfirmationDialog from "../components/ConfirmationDialog";
+import { useDisclosure } from "@mantine/hooks";
 
 const data = [
   { link: "/home/individuals-served", label: "1. Individuals Served" },
@@ -34,10 +36,7 @@ export default function HomePage() {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleLogout = async (event: React.MouseEvent) => {
-    event.preventDefault();
-    await logout();
-  };
+  const [opened, { open, close }] = useDisclosure(false);
 
   const links = data.map((item) => (
     <NavLink
@@ -59,7 +58,7 @@ export default function HomePage() {
             <div className={classes.navbarMain}>{links}</div>
 
             <div className={classes.footer}>
-              <a href="#" className={classes.link} onClick={handleLogout}>
+              <a href="#" className={classes.link} onClick={open}>
                 <span>Logout</span>
               </a>
             </div>
@@ -77,6 +76,8 @@ export default function HomePage() {
             </div>
           </div>
       </div>
+      
+      <ConfirmationDialog title="Log out" text="Are you sure you want to log out?" opened={opened} close={close} onClickYes={logout} />
     </>
   );
 }

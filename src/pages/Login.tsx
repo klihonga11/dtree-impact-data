@@ -1,6 +1,7 @@
 import {
   Button,
   Container,
+  Modal,
   Paper,
   PasswordInput,
   TextInput,
@@ -8,10 +9,14 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { useDisclosure } from "@mantine/hooks";
 
 export default function LoginPage() {
+  const [opened, { open, close }] = useDisclosure(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  
   const form = useForm({
     mode: "controlled",
     initialValues: { username: "", password: "" },
@@ -33,12 +38,15 @@ export default function LoginPage() {
   }) => {
     try {
       await login(values.username, values.password);
-    } catch (error) {
-      console.log("Failed to login", error);
+    } catch (err) {
+      const error = err as Error
+      setErrorMessage(error.message)
+      open();
     }
   };
 
   return (
+    <>
     <Container size={420} my={40}>
       <Title ta="center">D-tree Impact Data</Title>
 
@@ -66,5 +74,10 @@ export default function LoginPage() {
         </form>
       </Paper>
     </Container>
+
+    <Modal opened={opened} onClose={close} title="Error" withinPortal={false}>
+      {errorMessage}
+    </Modal>
+    </>
   );
 }
